@@ -44,6 +44,7 @@ set(dependencies
   builtin_interfaces
   tf2_ros
   opennav_coverage_msgs
+  nav2_ros_common
 )
 
 add_library(${library_name} SHARED

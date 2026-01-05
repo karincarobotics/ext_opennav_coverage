@@ -17,6 +17,7 @@
 #include <memory>
 #include <limits>
 #include "opennav_coverage_navigator/coverage_navigator.hpp"
+#include <nav2_ros_common/node_utils.hpp>
 
 namespace opennav_coverage_navigator
 {
@@ -29,22 +30,22 @@ CoverageNavigator::configure(
   start_time_ = rclcpp::Time(0);
   auto node = parent_node.lock();
 
-  path_blackboard_id_ = node->declare_or_get_parameter(
+  path_blackboard_id_ = nav2::declare_or_get_parameter(node,
     getName() + ".path_blackboard_id", std::string("path"));
-  field_blackboard_id_ = node->declare_or_get_parameter(
+  field_blackboard_id_ = nav2::declare_or_get_parameter(node,
     getName() + ".field_file_blackboard_id", std::string("field_filepath"));
-  polygon_blackboard_id_ = node->declare_or_get_parameter(
+  polygon_blackboard_id_ = nav2::declare_or_get_parameter(node,
     getName() + ".field_polygon_blackboard_id", std::string("field_polygon"));
-  polygon_frame_blackboard_id_ = node->declare_or_get_parameter(
+  polygon_frame_blackboard_id_ = nav2::declare_or_get_parameter(node,
     getName() + ".polygon_frame_blackboard_id", std::string("polygon_frame_id"));
 
   // Odometry smoother object for getting current speed
   odom_smoother_ = odom_smoother;
 
   // Groot monitoring
-  const bool enable_groot_monitoring = node->declare_or_get_parameter(
+  const bool enable_groot_monitoring = nav2::declare_or_get_parameter(node,
     getName() + ".enable_groot_monitoring", false);
-  const int groot_server_port = node->declare_or_get_parameter(
+  const int groot_server_port = nav2::declare_or_get_parameter(node,
     getName() + ".groot_server_port", 1667);
 
   bt_action_server_->setGrootMonitoring(enable_groot_monitoring, groot_server_port);
@@ -61,7 +62,7 @@ CoverageNavigator::getDefaultBTFilepath(
   const std::string pkg_share_dir =
     ament_index_cpp::get_package_share_directory("opennav_coverage_bt");
 
-  const auto default_bt_xml_filename = node->declare_or_get_parameter(
+  const auto default_bt_xml_filename = nav2::declare_or_get_parameter(node,
     "default_coverage_bt_xml",
     pkg_share_dir +
     "/behavior_trees/navigate_w_basic_complete_coverage.xml");
@@ -95,7 +96,7 @@ CoverageNavigator::goalReceived(ActionT::Goal::ConstSharedPtr goal)
 void
 CoverageNavigator::goalCompleted(
   typename ActionT::Result::SharedPtr /*result*/,
-  nav2_behavior_tree::BtStatus & /*final_bt_status*/)
+  const nav2_behavior_tree::BtStatus /*final_bt_status*/)
 {
 }
 
@@ -173,9 +174,9 @@ CoverageNavigator::onPreempt(ActionT::Goal::ConstSharedPtr goal)
 {
   RCLCPP_INFO(logger_, "Received goal preemption request");
 
-  if (goal->behavior_tree == bt_action_server_->getDefaultBTFilenameOrID() ||
+  if (goal->behavior_tree == bt_action_server_->getCurrentBTFilenameOrID() ||
     (goal->behavior_tree.empty() &&
-    bt_action_server_->getDefaultBTFilenameOrID() == bt_action_server_->getDefaultBTFilenameOrID()))
+    bt_action_server_->getCurrentBTFilenameOrID() == bt_action_server_->getDefaultBTFilenameOrID()))
   {
     // if pending goal requests the same BT as the current goal, accept the pending goal
     // if pending goal has an empty behavior_tree field, it requests the default BT file

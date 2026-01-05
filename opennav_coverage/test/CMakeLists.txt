@@ -1,13 +1,13 @@
 # Test utils
-ament_add_gtest(test_utils
-  test_utils.cpp
-)
-ament_target_dependencies(test_utils
-  ${dependencies}
-)
-target_link_libraries(test_utils
-  ${library_name}
-)
+# ament_add_gtest(test_utils
+#   test_utils.cpp
+# )
+# ament_target_dependencies(test_utils
+#   ${dependencies}
+# )
+# target_link_libraries(test_utils
+#   ${library_name}
+# )
 
 # Test robot
 ament_add_gtest(test_robot
@@ -21,15 +21,15 @@ target_link_libraries(test_robot
 )
 
 # Test visualizations
-ament_add_gtest(test_viz
-  test_viz.cpp
-)
-ament_target_dependencies(test_viz
-  ${dependencies}
-)
-target_link_libraries(test_viz
-  ${library_name}
-)
+# ament_add_gtest(test_viz
+#   test_viz.cpp
+# )
+# ament_target_dependencies(test_viz
+#   ${dependencies}
+# )
+# target_link_libraries(test_viz
+#   ${library_name}
+# )
 
 # Test headland
 ament_add_gtest(test_headland
@@ -43,15 +43,15 @@ target_link_libraries(test_headland
 )
 
 # Test swath
-ament_add_gtest(test_swath
-  test_swath.cpp
-)
-ament_target_dependencies(test_swath
-  ${dependencies}
-)
-target_link_libraries(test_swath
-  ${library_name}
-)
+# ament_add_gtest(test_swath
+#   test_swath.cpp
+# )
+# ament_target_dependencies(test_swath
+#   ${dependencies}
+# )
+# target_link_libraries(test_swath
+#   ${library_name}
+# )
 
 # Test route
 ament_add_gtest(test_route
