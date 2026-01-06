@@ -42,9 +42,9 @@ void Visualizer::visualize(
   // Visualize coverage path
   if (nav_plan_pub_->get_subscription_count() > 0 && nav_path.poses.size() > 0) {
     auto utm_path = std::make_unique<nav_msgs::msg::Path>(nav_path);
-    utm_path->header.frame_id = GLOBAL_FRAME;
+    utm_path->header.frame_id = namespace_ + "/" + GLOBAL_FRAME;
     for (unsigned int i = 0; i != utm_path->poses.size(); i++) {
-      utm_path->poses[i].header.frame_id = GLOBAL_FRAME;
+      utm_path->poses[i].header.frame_id = namespace_ + "/" + GLOBAL_FRAME;
       utm_path->poses[i].pose.position.x += ref_pt.getX();
       utm_path->poses[i].pose.position.y += ref_pt.getY();
     }
@@ -55,7 +55,7 @@ void Visualizer::visualize(
   if (headlands_pub_->get_subscription_count() > 0) {
     auto field_polygon = std::make_unique<geometry_msgs::msg::PolygonStamped>();
     field_polygon->header.stamp = header.stamp;
-    field_polygon->header.frame_id = GLOBAL_FRAME;
+    field_polygon->header.frame_id = namespace_ + "/" + GLOBAL_FRAME;
     Polygon boundary = total_field.getGeometry(0);  // Only outer-most polygon boundary
     for (unsigned int i = 0; i != boundary.size(); i++) {
       field_polygon->polygon.points.push_back(util::toMsg(boundary.getGeometry(i) + ref_pt));
@@ -67,7 +67,7 @@ void Visualizer::visualize(
   if (planning_field_pub_->get_subscription_count() > 0) {
     auto headlandless_polygon = std::make_unique<geometry_msgs::msg::PolygonStamped>();
     headlandless_polygon->header.stamp = header.stamp;
-    headlandless_polygon->header.frame_id = GLOBAL_FRAME;
+    headlandless_polygon->header.frame_id = namespace_ + "/" + GLOBAL_FRAME;
     if (no_headland_field.size() > 0) {
       Polygon planning_field = no_headland_field.getGeometry(0);  // Only outer polygon boundary
       for (unsigned int i = 0; i != planning_field.size(); i++) {
@@ -82,7 +82,7 @@ void Visualizer::visualize(
   if (swaths_pub_->get_subscription_count() > 0) {
     auto output_swaths = std::make_unique<visualization_msgs::msg::Marker>();
     output_swaths->header.stamp = header.stamp;
-    output_swaths->header.frame_id = GLOBAL_FRAME;
+    output_swaths->header.frame_id = namespace_ + "/" + GLOBAL_FRAME;
     output_swaths->action = visualization_msgs::msg::Marker::ADD;
     output_swaths->type = visualization_msgs::msg::Marker::LINE_LIST;
     output_swaths->pose.orientation.w = 1.0;

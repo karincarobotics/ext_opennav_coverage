@@ -34,6 +34,8 @@ namespace opennav_coverage
 
 class Visualizer
 {
+protected:
+  std::string namespace_;
 public:
   /**
    * @brief Constructor for visualizations
@@ -44,6 +46,7 @@ public:
   template<typename NodeT>
   void activate(NodeT node)
   {
+    namespace_ = node->get_namespace();
     nav_plan_pub_ = rclcpp::create_publisher<nav_msgs::msg::Path>(
       node->get_node_topics_interface(),
       "coverage_server/coverage_plan", rclcpp::QoS(1));
