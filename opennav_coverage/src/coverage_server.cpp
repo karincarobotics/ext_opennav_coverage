@@ -51,6 +51,7 @@ CoverageServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
     "compute_coverage_path",
     std::bind(&CoverageServer::computeCoveragePath, this),
     nullptr,
+    nullptr,
     std::chrono::milliseconds(500),
     true);
 

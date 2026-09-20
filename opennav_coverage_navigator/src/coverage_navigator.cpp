@@ -95,9 +95,23 @@ CoverageNavigator::goalReceived(ActionT::Goal::ConstSharedPtr goal)
 
 void
 CoverageNavigator::goalCompleted(
-  typename ActionT::Result::SharedPtr /*result*/,
+  typename ActionT::Result::SharedPtr result,
   nav2_behavior_tree::BtStatus & /*final_bt_status*/)
 {
+  if (result->error_code == 0) {
+    if (bt_action_server_->populateInternalError(result)) {
+      RCLCPP_WARN(
+        logger_,
+        "CoverageNavigator::goalCompleted, internal error %d:%s.",
+        result->error_code,
+        result->error_msg.c_str());
+    }
+  } else {
+    RCLCPP_WARN(
+      logger_, "CoverageNavigator::goalCompleted error %d:%s.",
+      result->error_code,
+      result->error_msg.c_str());
+  }
 }
 
 void
