@@ -15,11 +15,12 @@ same Nav2 API as HEAD, so it is the closest base: it needs only the small delta 
 
 ## Branch model
 
-- **`kr-jazzy-v2`** = upstream `main` + the kr delta. Built on Jazzy against Nav2 HEAD.
+- **`kr-main`** = upstream `main` + the kr delta. One branch for every distro (Jazzy, Lyrical),
+  always built against Nav2 HEAD.
 - Upstream `main` is on Fields2Cover **v2**; we install the patched v2.1.1 into `/usr/local`
   (never `ros-$ROS_DISTRO-fields2cover`).
-- `kr-lyrical` (upstream `lyrical` + the same delta) is expected to be replaced by this branch once
-  it is verified on Lyrical.
+- `kr-lyrical` (upstream `lyrical` + the same delta) is superseded by `kr-main` once `kr-main` is
+  verified on Lyrical.
 
 ## The kr delta on top of upstream `main`
 
@@ -46,7 +47,7 @@ Keep it this small. Each item is required by Nav2 HEAD, not a feature:
 
 ## Merging upstream
 
-1. `git fetch origin && git merge origin/main` on `kr-jazzy-v2`.
+1. `git fetch origin && git merge origin/main` on `kr-main`.
 2. Conflicts are expected only in the delta's lines. Re-apply the three items above; check whether
    upstream has already absorbed one, and drop it from this file if so.
 3. If Nav2 HEAD changed an API in the meantime, fix by hand from the compiler output and add the
